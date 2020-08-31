@@ -2,19 +2,19 @@
 .First <- function(){
   if(interactive()){
     random_url_at_startup <- function(user = "ryantimpe",
-                                      open_link = "n",
+                                      open_link = "no",
                                       link_block_list = c("lego.com", "ryantimpe.com"),
                                       update_increment = 14){
 
-      #Decide whether to perform an API call or not
+      #Location of cached file
       file_name = paste0(dirname(tempdir()), "/rtweetlikes_", user, ".rds")
-
+      #Number of days since Favorites file was updated
       if(!file.exists(file_name)){
         days_since_update = 99
       } else {
         days_since_update = as.numeric(Sys.Date() - as.Date(file.info(file_name)$ctime))
       }
-
+      #Decide whether to perform an API call or not
       if(days_since_update > update_increment){
         rtweet::get_favorites(user) -> likes
         saveRDS(likes, file = file_name)
@@ -40,7 +40,7 @@
 
       #Pick one
       this_link <- sample(likes_urls, 1)
-      cat("Check out this link you wanted to read!\n", this_link)
+      cat("Check out this link you wanted to read!\n", this_link, "\n")
 
       #Should the link open in your browser?
       if(open_link == "ask"){
